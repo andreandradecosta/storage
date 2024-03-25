@@ -1,4 +1,6 @@
 #!/bin/bash
+PYTHON_CMD="apptainer exec dlio.sif python3"
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # Defaults
 export PYTHONPATH=${SCRIPT_DIR}/dlio_benchmark
@@ -253,7 +255,7 @@ datagen() {
 	fi
 	config_name=$(get_config_file $workload $accelerator_type)
 	prefixed_array=$(add_prefix_params ${params[@]})
-	mpirun -np $parallel python3 dlio_benchmark/dlio_benchmark/main.py --config-path=$CONFIG_PATH workload=$config_name ++workload.workflow.generate_data=True ++workload.workflow.train=False ${prefixed_array[@]} ${EXTRA_PARAMS[@]}
+	mpirun -np $parallel $PYTHON_CMD dlio_benchmark/dlio_benchmark/main.py --config-path=$CONFIG_PATH workload=$config_name ++workload.workflow.generate_data=True ++workload.workflow.train=False ${prefixed_array[@]} ${EXTRA_PARAMS[@]}
 }
 
 run() {
@@ -277,8 +279,8 @@ run() {
 	fi
 	config_name=$(get_config_file $workload $accelerator_type)
 	prefixed_array=$(add_prefix_params ${params[@]})
-	mpirun -hosts $hosts -np $num_accelerators python3 dlio_benchmark/dlio_benchmark/main.py --config-path=$CONFIG_PATH workload=$config_name ++workload.workflow.generate_data=False ++workload.workflow.train=True ${prefixed_array[@]} ${EXTRA_PARAMS[@]}
-	#python report.py --result-dir $results_dir --config-path=$CONFIG_PATH
+	mpirun -np $num_accelerators $PYTHON_CMD dlio_benchmark/dlio_benchmark/main.py --config-path=$CONFIG_PATH workload=$config_name ++workload.workflow.generate_data=False ++workload.workflow.train=True ${prefixed_array[@]} ${EXTRA_PARAMS[@]}
+	$PYTHON_CMD report.py --result-dir $results_dir #--config-path=$CONFIG_PATH
 }
 
 configview() {

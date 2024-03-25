@@ -1,0 +1,9 @@
+unet3d_data/
+results/
+checkpoints/
+resultsdir/
+*.sif
+*.tar.gz
+*.log
+*.out
+
