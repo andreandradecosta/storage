@@ -280,7 +280,7 @@ run() {
 	config_name=$(get_config_file $workload $accelerator_type)
 	prefixed_array=$(add_prefix_params ${params[@]})
 	mpirun -np $num_accelerators $PYTHON_CMD dlio_benchmark/dlio_benchmark/main.py --config-path=$CONFIG_PATH workload=$config_name ++workload.workflow.generate_data=False ++workload.workflow.train=True ${prefixed_array[@]} ${EXTRA_PARAMS[@]}
-	$PYTHON_CMD report.py --result-dir $results_dir #--config-path=$CONFIG_PATH
+	# $PYTHON_CMD report.py --result-dir $results_dir #--config-path=$CONFIG_PATH
 }
 
 configview() {
